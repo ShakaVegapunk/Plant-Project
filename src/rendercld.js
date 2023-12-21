@@ -24,10 +24,10 @@ const settings={
 };
 
 function handleLiClick(event) {
-  const itemId = event.currentTarget.dataset.itemId; 
-  event.currentTarget.classList.toggle('green');
-  const isGreen = event.currentTarget.classList.contains('green');
-  localStorage.setItem(`id:${itemId}`, isGreen.toString());
+  const dateKey = event.currentTarget.dataset.dateKey;
+  event.currentTarget.classList.toggle('color');
+  const isGreen = event.currentTarget.classList.contains('color');
+  localStorage.setItem(`id:${dateKey}`, isGreen.toString());
 }
 
 function renderCalendar() {
@@ -36,19 +36,24 @@ function renderCalendar() {
   const liElements = document.querySelectorAll('#caleandar li');
 
   liElements.forEach((liElement) => {
-    const itemId =  uid();
-    liElement.dataset.itemId = itemId;
-    const storedValue = localStorage.getItem(`id:${itemId}`);
+    const dateElement = liElement.querySelector('p.cld-number');
     
-    if (storedValue === 'true') {
-      liElement.classList.add('green');
-    }
+    if (dateElement) {
+      const dateKey = dateElement.textContent.trim();
+      liElement.dataset.dateKey = dateKey;
+      
+      const storedValue = localStorage.getItem(`id:${dateKey}`);
+      
+      if (storedValue === 'true') {
+        liElement.classList.add('color');
+      } else {
+        liElement.classList.remove('color');
+      }
 
-    liElement.addEventListener('click', handleLiClick);
+      liElement.addEventListener('click', handleLiClick);
+    }
   });
 }
-const uid = function(){
-        return Date.now().toString(36) + Math.random().toString(36)
-}
+
 
 export { renderCalendar,};
